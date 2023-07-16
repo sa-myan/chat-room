@@ -18,7 +18,6 @@ const firebaseApp = initializeApp({
   appId: "1:458111258571:web:4b7832781136cce37b704e",
 });
 
-
 function App() {
   const auth = getAuth(firebaseApp);
   const [user, setUser] = useState();
@@ -31,12 +30,8 @@ function App() {
       ) : (
         <ChatRoom user={user} setUser={setUser} auth={auth}/>
       )}
-      <button onClick={() => console.log(user)}>Log user state</button>
-      <button onClick={() => console.log(auth)}>Log auth object</button>
     </div>
   );
 }
-
-
 
 export default App;
