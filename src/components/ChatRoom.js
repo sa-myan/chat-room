@@ -1,6 +1,9 @@
-const ChatRoom = () => {
+import SignOut from "./SignOut";
+
+
+const ChatRoom = ({user, setUser, auth}) => {
     return (
-        <h1>Chat Room</h1>
+        <SignOut user={user} setUser={setUser} auth={auth} />
     )
 }
 

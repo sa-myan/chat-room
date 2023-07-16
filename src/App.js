@@ -1,16 +1,12 @@
 import ChatRoom from "./components/ChatRoom";
+import SignIn from "./components/SignIn";
 
 // firebase sdk
 import { initializeApp } from "firebase/app";
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-  signOut,
-} from "firebase/auth";
+import { getAuth } from "firebase/auth";
 
 // hooks
-import { useState } from "react";
+import {  useState } from "react";
 
 // initialize a project
 const firebaseApp = initializeApp({
@@ -22,45 +18,25 @@ const firebaseApp = initializeApp({
   appId: "1:458111258571:web:4b7832781136cce37b704e",
 });
 
-const auth = getAuth(firebaseApp);
 
 function App() {
-
-  const [user, setUser] = useState(auth.currentUser)
+  const auth = getAuth(firebaseApp);
+  const [user, setUser] = useState();
+  auth.onAuthStateChanged(()=> setUser(auth.currentUser))
 
   return (
     <div className="App">
-      {user === null ? <SignIn user={user} setUser={setUser} /> : <SignOut user={user} setUser={setUser}/>}
+      {!user ? (
+        <SignIn user={user} setUser={setUser} auth={auth} />
+      ) : (
+        <ChatRoom user={user} setUser={setUser} auth={auth}/>
+      )}
+      <button onClick={() => console.log(user)}>Log user state</button>
       <button onClick={() => console.log(auth)}>Log auth object</button>
     </div>
   );
 }
 
-const SignIn = ({user, setUser}) => {
-  const signInWithGoogle = () => {
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider)
-    .then((result) => {
-      setUser(auth.currentUser)
-    //   // const credential = GoogleAuthProvider.credentialFromResult(result);
-    //   // const token = credential.accessToken;
-    //   // const user = result.user;
-    //   // const info = getAdditionalUserInfo(result);
-    })
-    // .catch((error) => {
-    //   // const errorCode = error.errorCode
-    //   // const errorMessage = error.message
-    //   // const email = error.customData.email
-    //   // const credential = GoogleAuthProvider.credentialFromError(error)
-    // });
-  };
-  return <button onClick={signInWithGoogle}>Sign in with Google</button>;
-};
 
-const SignOut = ({user, setUser}) => {
-  // signOut is a promise that works like signInWithPopup
-  // I did not write any resolving or rejecting logic for simplicity
-  return <button onClick={() => signOut(auth).then(()=> setUser(auth.currentUser))}>SignOut</button>;
-};
 
 export default App;
