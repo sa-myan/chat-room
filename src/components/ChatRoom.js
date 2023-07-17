@@ -4,8 +4,7 @@ import { addDoc, collection, getDocs, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 const ChatRoom = ({ user, setUser, auth, db }) => {
-  const [messageText, setMessageText] = useState("")
-
+  const [messageText, setMessageText] = useState("");
   const [messages, setMessages] = useState([]);
 
   async function sendMessage(ee) {
@@ -16,7 +15,7 @@ const ChatRoom = ({ user, setUser, auth, db }) => {
         senderName: user.displayName,
         senderId: user.uid,
         content: message,
-        time: new Date()
+        time: new Date(),
       });
     } catch (e) {
       alert(e);
@@ -45,7 +44,7 @@ const ChatRoom = ({ user, setUser, auth, db }) => {
         <SignOut user={user} setUser={setUser} auth={auth} />
       </div>
       <form onSubmit={sendMessage}>
-        <input type="text" onChange={(e) => setMessageText(e.target.value)}/>
+        <input type="text" onChange={(e) => setMessageText(e.target.value)} />
         <input type="submit" value={"Submit"} />
       </form>
       {messages.map((message, index) => {
