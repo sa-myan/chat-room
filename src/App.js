@@ -27,7 +27,6 @@ function App() {
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, () => setUser(auth.currentUser));
-    console.log("run");
     return () => {
       unsub();
     };

@@ -1,19 +1,20 @@
 import SignOut from "./SignOut";
 import "../styles/ChatRoom.css";
 import { addDoc, collection, getDocs, onSnapshot } from "firebase/firestore";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 const ChatRoom = ({ user, setUser, auth, db }) => {
-  const messageBoxRef = useRef(null);
+  const [messageText, setMessageText] = useState("")
 
   const [messages, setMessages] = useState([]);
 
-  async function sendMessage(e) {
-    e.preventDefault();
-    const message = messageBoxRef.current.value;
+  async function sendMessage(ee) {
+    ee.preventDefault();
+    const message = messageText;
     try {
       await addDoc(collection(db, "messages"), {
-        sender: user.displayName,
+        senderName: user.displayName,
+        senderId: user.uid,
         content: message,
         time: new Date()
       });
@@ -30,7 +31,6 @@ const ChatRoom = ({ user, setUser, auth, db }) => {
         messageArray.push(doc.data());
       });
       setMessages(messageArray);
-      console.log(messageArray);
     });
 
     return () => {
@@ -44,12 +44,9 @@ const ChatRoom = ({ user, setUser, auth, db }) => {
         <p>Hello {user.displayName}</p>
         <SignOut user={user} setUser={setUser} auth={auth} />
       </div>
-      <button onClick={() => sendMessage(new Date().toLocaleTimeString())}>
-        Send Message
-      </button>
-      <form>
-        <input type="text" ref={messageBoxRef} />
-        <input type="submit" value={"Submit"} onClick={sendMessage} />
+      <form onSubmit={sendMessage}>
+        <input type="text" onChange={(e) => setMessageText(e.target.value)}/>
+        <input type="submit" value={"Submit"} />
       </form>
       {messages.map((message, index) => {
         return <p key={index}>{message.content}</p>;
