@@ -7,7 +7,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 // hooks
-import {  useState } from "react";
+import { useEffect, useState } from "react";
 
 // initialize a project
 const firebaseApp = initializeApp({
@@ -24,7 +24,14 @@ const db = getFirestore(firebaseApp);
 
 function App() {
   const [user, setUser] = useState();
-  onAuthStateChanged(auth, ()=> setUser(auth.currentUser))
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, () => setUser(auth.currentUser));
+    console.log("run");
+    return () => {
+      unsub();
+    };
+  });
 
   return (
     <div className="App">
