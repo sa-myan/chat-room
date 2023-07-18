@@ -5,6 +5,7 @@ import SignIn from "./components/SignIn";
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 
 // hooks
 import { useEffect, useState } from "react";
@@ -21,6 +22,10 @@ const firebaseApp = initializeApp({
 
 const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
+const appCheck = initializeAppCheck(firebaseApp, {
+  provider: new ReCaptchaV3Provider('6LfV1jEnAAAAACLiHQcnC2By2q9Yu8u_I5lDf_x9'),
+  isTokenAutoRefreshEnabled: true
+})
 
 function App() {
   const [user, setUser] = useState();
